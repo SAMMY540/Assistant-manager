@@ -85,6 +85,26 @@ class TestCheckStoreUrl(unittest.TestCase):
         result = check_store_url("sammy-production-store.myshopify.com")
         self.assertEqual(result.status, CheckStatus.WARN)
 
+    def test_shopify_in_query_string_does_not_pass(self) -> None:
+        """URL with shopify.com in query params should WARN, not PASS."""
+        result = check_store_url("https://evil.com?redirect=shopify.com")
+        self.assertEqual(result.status, CheckStatus.WARN)
+
+    def test_shopify_in_path_does_not_pass(self) -> None:
+        """URL with shopify.com in path should WARN, not PASS."""
+        result = check_store_url("https://evil.com/shopify.com")
+        self.assertEqual(result.status, CheckStatus.WARN)
+
+    def test_non_myshopify_subdomain_warns(self) -> None:
+        """A subdomain that merely ends with myshopify.com string should not pass."""
+        result = check_store_url("https://notmyshopify.com")
+        self.assertEqual(result.status, CheckStatus.WARN)
+
+    def test_evil_myshopify_com_subdomain_warns(self) -> None:
+        """Subdomain like evil.myshopify.com.attacker.com should not pass."""
+        result = check_store_url("https://myshopify.com.evil.com")
+        self.assertEqual(result.status, CheckStatus.WARN)
+
 
 class TestStoreHealthReport(unittest.TestCase):
     """Tests for the aggregated health report."""
