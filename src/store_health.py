@@ -161,6 +161,13 @@ def check_store_url(url: str) -> CheckResult:
             message="Store URL should use http:// or https://",
             details={"url": url},
         )
+    if url.startswith("http://"):
+        return CheckResult(
+            name="store_url",
+            status=CheckStatus.WARN,
+            message="Store URL should use HTTPS for security",
+            details={"url": url},
+        )
     if ".myshopify.com" not in url and "shopify.com" not in url:
         return CheckResult(
             name="store_url",
