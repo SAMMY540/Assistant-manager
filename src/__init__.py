@@ -1,0 +1,1 @@
+"""Assistant manager package for Sammy Production 2026."""
