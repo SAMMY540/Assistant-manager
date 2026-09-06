@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
+from urllib.parse import urlparse
 
 
 class CheckStatus(str, Enum):
@@ -168,12 +169,14 @@ def check_store_url(url: str) -> CheckResult:
             message="Store URL should use HTTPS for security",
             details={"url": url},
         )
-    if ".myshopify.com" not in url and "shopify.com" not in url:
+    parsed = urlparse(url)
+    hostname = parsed.hostname or ""
+    if not hostname.endswith(".myshopify.com") and hostname != "myshopify.com":
         return CheckResult(
             name="store_url",
             status=CheckStatus.WARN,
             message="URL does not look like a Shopify store URL",
-            details={"url": url},
+            details={"url": url, "hostname": hostname},
         )
     return CheckResult(
         name="store_url",
