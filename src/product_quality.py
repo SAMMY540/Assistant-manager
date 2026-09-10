@@ -17,7 +17,7 @@ class QualityLevel(str, Enum):
 
     EXCELLENT = "excellent"
     GOOD = "good"
-    POOR = "pooor"
+    POOR = "poor"
     CRITICAL = "critical"
 
 
