@@ -331,13 +331,17 @@ class TestCatalogQualityReport(unittest.TestCase):
              "body_html": "<p>A great product with many features.</p>",
              "tags": "tag1", "vendor": "Acme"},
             {"id": 3, "title": "Bad", "price": 10.0, "images": ["img.jpg"],
-             "tags": "", "vendor": ""},
+             "body_html": "<p>A great product with many features.</p>",
+             "tags": "", "vendor": "Acme"},
             {"id": 4, "title": "Bad", "price": 10.0, "images": ["img.jpg"],
-             "tags": "", "vendor": ""},
+             "body_html": "<p>A great product with many features.</p>",
+             "tags": "", "vendor": "Acme"},
         ]
         report = run_quality_check(products)
+        # Products 3 and 4 have 3 POOR issues each (short title, few images, no tags)
+        # Score = 1.0 - 0.45 = 0.55, which is POOR level
         # 2 out of 4 are poor = 50%, which is > 30%
-        self.assertGreater(report.poor_count, 0)
+        self.assertEqual(report.poor_count, 2)
         self.assertEqual(report.overall_level, QualityLevel.POOR)
 
 
